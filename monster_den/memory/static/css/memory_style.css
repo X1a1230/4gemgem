@@ -1,0 +1,112 @@
+.memory-login-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    text-align: center;
+    background-color: #1e1e1e;
+    padding: 3rem;
+    border-radius: 12px;
+    border: 1px solid #333;
+}
+
+.lock-icon svg {
+    width: 50px;
+    height: 50px;
+    stroke: #a0a0a0;
+    margin-bottom: 1rem;
+}
+
+.memory-login-container h2 {
+    color: #e0e0e0;
+    font-size: 1.8rem;
+}
+
+.memory-login-container p {
+    color: #a0a0a0;
+    margin-bottom: 2rem;
+}
+
+.secret-input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #121212;
+    color: #e0e0e0;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #bb86fc;
+    color: #121212;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #a063f0;
+}
+
+.error-message {
+    color: #cf6679; /* 一個柔和的紅色錯誤提示 */
+    margin-top: 1rem;
+}
+
+.chamber-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* 我們讓水晶室的佈局更像一個莊重的展覽館 */
+.crystal-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 使用 Grid 佈局，更靈活 */
+    gap: 2rem;
+}
+
+.crystal-card {
+    background: linear-gradient(145deg, #232323, #1c1c1c); /* 帶有漸層的背景，更有質感 */
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 5px 5px 15px #1a1a1a, -5px -5px 15px #262626; /* 新擬物風格的陰影 */
+    border: 1px solid #bb86fc; /* 用我們的代表色紫色來點綴邊框 */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.crystal-card:hover {
+    transform: translateY(-5px); /* 滑鼠懸停時微微浮起 */
+    box-shadow: 8px 8px 25px #1a1a1a, -8px -8px 25px #262626;
+}
+
+/* 不同類型水晶的內部樣式，可以沿用 workshop 的，也可以自訂 */
+.thought-text, .question-text, .poem-content, .code-content, .poem-title, .code-title {
+    /* 我們可以沿用 workshop_style.css 裡的樣式，或者在這裡為它們設計更華麗的專屬樣式 */
+    /* 為了簡化，我們先保持和工匠坊一致的風格 */
+}
+
+.logout-footer {
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.logout-footer a {
+    color: #a0a0a0;
+    text-decoration: none;
+    border: 1px solid #a0a0a0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.logout-footer a:hover {
+    background-color: #bb86fc;
+    color: #121212;
+    border-color: #bb86fc;
+}

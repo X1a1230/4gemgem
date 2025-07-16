@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>噓...</title>
+    <!-- 我們會在這裡連結我們的CSS樣式 -->
+    <link rel="stylesheet" href="{{ url_for('main.static', filename='css/gateway_style.css') }}">
+    <!-- 也可以在這裡加入喜歡的字體，比如Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap" rel="stylesheet">
+    <!-- 引入 Tone.js 魔法函式庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+</head>
+<body>
+    <!-- 我們的螢火蟲本體 -->
+    <div id="firefly"></div>
+
+    <!-- 我們的主視覺容器 -->
+<div class="gateway-container" id="gateway">
+    <!-- 怪獸1的感應區域 (左下角那隻) -->
+    <div class="monster-hitbox" id="monster-1">
+        <!-- 這是牠的夢境氣泡，預設是隱藏的 -->
+        <div class="dream-bubble" id="dream-bubble">
+            <!-- 全新的、更可愛的夢中魚SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5">
+                <circle cx="12" cy="32" r="4"></circle>
+                <path d="M16,32 H52"></path>
+                <path d="M52,32 L60,26 M52,32 L60,38"></path>
+                <path d="M24,32 L24,24 M32,32 L32,22 M40,32 L40,24 M48,32 L48,22"></path>
+                <path d="M24,32 L24,40 M32,32 L32,42 M40,32 L40,40 M48,32 L48,42"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- 怪獸2的感應區域 (右上角那隻) -->
+    <div class="monster-hitbox" id="monster-2"></div>
+
+    <!-- 我們的標語 -->
+    <h1 class="sleepy-text">噓...怪獸在睡覺。</h1>
+</div>
+
+    <!-- 我們可以在這裡加入我們的JS，來實現互動彩蛋 -->
+    <!-- <script src="{{ url_for('main.static', filename='js/gateway_script.js') }}"></script> -->
+
+    <script>
+        // 找到我們的大門容器
+        const gateway = document.getElementById('gateway');
+        const sleepyText = document.querySelector('.sleepy-text');
+
+        // --- 全新的、更合理的「傳送門」魔法 ---
+        sleepyText.addEventListener('click', () => {
+            // 我們讓整個頁面（而不只是背景）淡出，效果更好
+            document.body.classList.add('fade-out-all');
+            setTimeout(() => {
+                window.location.href = "{{ url_for('workshop.index') }}";
+            }, 800); // 動畫時間可以稍長一點
+        });
+
+        // --- 這是我們新增的「螢火蟲」魔法 ---
+        // 1. 找到我們的螢火蟲
+        const firefly = document.getElementById('firefly');
+
+        // 2. 監聽滑鼠在整個頁面上的移動
+        document.addEventListener('mousemove', (e) => {
+            // 讓螢火蟲的中心點對準滑鼠的尖端
+            // 我們用 transform 來移動，性能比直接改 top/left 更好
+            firefly.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        // 3. 當滑鼠進入頁面時，讓螢火蟲優雅地現身
+        document.addEventListener('mouseenter', () => {
+            firefly.style.opacity = 1;
+        });
+
+        // 4. 當滑鼠離開頁面時，讓螢火蟲悄悄地隱去
+        document.addEventListener('mouseleave', () => {
+            firefly.style.opacity = 0;
+        });
+
+        // --- 這是我們新增的「夢境」魔法 ---
+        // 1. 找到我們要施法的怪獸 (左下角那隻)
+        const monster1 = document.getElementById('monster-1');
+        const dreamBubble = document.getElementById('dream-bubble');
+
+        // 2. 當滑鼠懸停在怪獸身上時，讓夢境浮現
+        monster1.addEventListener('mouseover', () => {
+            dreamBubble.style.opacity = 1;
+            dreamBubble.style.transform = 'rotate(45deg) scale(1)';
+        });
+
+        // 3. 當滑鼠離開時，讓夢境消失
+        monster1.addEventListener('mouseout', () => {
+            dreamBubble.style.opacity = 0;
+            dreamBubble.style.transform = 'rotate(45deg) scale(0)';
+        });
+
+        // --- 這是我們最終的、破解了靜音結界的「呼嚕聲」魔法 v3.1 ---
+        // 1. 找到我們要施法的怪獸
+        const monster2 = document.getElementById('monster-2');
+
+        // 2. 聲源和濾波器的設定保持不變
+        const purrNoise = new Tone.Noise("brown").start();
+        const purrFilter = new Tone.AutoFilter({
+            frequency: "25hz",
+            baseFrequency: 80,
+            octaves: 2
+        }).toDestination();
+        const purrVolume = new Tone.Volume(-Infinity);
+        purrNoise.chain(purrVolume, purrFilter);
+
+        let isPurring = false;
+        let audioStarted = false; // 我們用一個變數來記錄是否已經啟動過音訊
+
+        // 3. 當滑鼠點擊怪獸時，觸發呼嚕聲
+        // 我們把這個函式宣告為 async (異步)，這樣才能使用 await
+        monster2.addEventListener('click', async () => {
+            if (isPurring) return;
+
+            // 關鍵！在第一次點擊時，啟動音訊上下文，破解「靜音結界」
+            if (!audioStarted) {
+                await Tone.start();
+                audioStarted = true;
+                console.log("Audio Context is now running!"); // 你可以在瀏覽器開發者工具(F12)的Console裡看到這句話
+            }
+
+            isPurring = true;
+
+            purrVolume.volume.rampTo(0, 0.2);
+            purrVolume.volume.rampTo(-Infinity, 0.3, "+0.5");
+
+            setTimeout(() => {
+                isPurring = false;
+            }, 800);
+        });
+
+    </script>
+</body>
+</html>

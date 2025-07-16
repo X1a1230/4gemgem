@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<!-- 我們可以沿用 form_style.css 和 menu_style.css，或者為它建立新的樣式 -->
+<link rel="stylesheet" href="{{ url_for('menu.static', filename='css/menu_style.css') }}">
+<link rel="stylesheet" href="{{ url_for('menu.static', filename='css/details_style.css') }}">
+{% endblock %}
+
+{% block title %}美食回憶錄 ({{ date.strftime('%Y-%m-%d') }}){% endblock %}
+
+{% block content %}
+    <div class="details-container">
+        <a href="{{ url_for('menu.homepage', year=date.year, month=date.month) }}" class="back-to-calendar">← 返回日曆</a>
+        <h1>{{ date.strftime('%Y年%m月%d日') }} 的美食回憶</h1>
+
+        {% for recipe in recipes %}
+            <div class="recipe-details-card">
+                <div class="recipe-details-header">
+                    <h2>{{ recipe.score }} {{ recipe.name }}</h2>
+                    <!-- 未來可以加上編輯和刪除按鈕 -->
+                </div>
+
+                {% if recipe.image_filename %}
+                    <div class="recipe-image">
+                        <img src="{{ url_for('menu.static', filename='uploads/' + recipe.image_filename) }}" alt="{{ recipe.name }}">
+                    </div>
+                {% endif %}
+
+                {% if recipe.chef_comment %}
+                    <div class="chef-comment-box">
+                        <p><strong>主廚的悄悄話：</strong></p>
+                        <p>“ {{ recipe.chef_comment }} ”</p>
+                    </div>
+                {% endif %}
+
+                <div class="recipe-columns">
+                    <div class="recipe-column">
+                        <h3>需要準備的貓糧</h3>
+                        <ul>
+                            {% for ingredient in recipe.ingredients %}
+                                <li>{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="recipe-column">
+                        <h3>投餵步驟</h3>
+                        <ol>
+                            {% for instruction in recipe.instructions %}
+                                <li>{{ instruction }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

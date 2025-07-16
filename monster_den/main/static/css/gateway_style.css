@@ -1,0 +1,184 @@
+/* 全局設定，讓頁面充滿整個視窗 */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* 隱藏滾動條，保持沉浸感 */
+    background-color: #000508;
+    font-family: 'Noto Serif TC', serif; /* 使用我們引入的思源宋體，增加古典神秘感 */
+}
+
+/* 主視覺容器的樣式 */
+.gateway-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* cursor: pointer; /* 讓滑鼠變成手形，暗示可以點擊 */
+
+    /* --- 核心：設定背景圖 --- */
+    /* 請根據你存放圖片的路徑修改 '..' 的層級 */
+    background-image: url('../images/monsters.png'); /* 假設你把圖片放在 static/img/ 裡 */
+    background-size: contain; /* 讓圖片鋪滿整個容器，可能會裁剪 */
+    background-position: center; /* 讓圖片居中顯示 */
+    background-repeat: no-repeat;
+
+    /* 為了讓文字更突出，可以加一個半透明的黑色遮罩 */
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.2);
+
+    transition: all 0.5s ease-in-out; /* 為了未來的互動效果，加上過渡動畫 */
+}
+
+/* 標語文字的樣式 */
+.sleepy-text {
+    position: absolute; /* 讓它可以自由定位 */
+    top: 5%; /* 定位在距離頂部 5% 的地方 */
+    left: 50%;
+    transform: translateX(-50%); /* 確保水平居中 */
+    color: rgba(255, 255, 255, 0.6); /* 讓它更柔和一點 */
+    font-size: 2rem; /* 稍微縮小一點，更精緻 */
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    cursor: pointer; /* 讓滑鼠在文字上時變成手形 */
+}
+
+/* 這就是我們的彩蛋：滑鼠移到容器上時，文字浮現 */
+.gateway-container:hover .sleepy-text {
+    opacity: 1;
+}
+
+/* 當容器被加上 fade-out class 時的樣式 */
+.gateway-container.fade-out {
+    opacity: 0;
+    transform: scale(1.1); /* 可以加一點點放大效果，更有趣 */
+}
+
+/* --- 螢火蟲魔法咒語 --- */
+#firefly {
+    /* 讓螢火蟲脫離正常的文檔流，懸浮在頁面之上 */
+    position: fixed;
+
+    /* 螢火蟲的大小 */
+    width: 10px;
+    height: 10px;
+
+    /* 螢火蟲的核心顏色 (溫暖的黃色) */
+    background-color: #f0e68c;
+
+    /* 把它變成圓形 */
+    border-radius: 50%;
+
+    /* 關鍵！用 box-shadow 創造出柔和的光暈效果 */
+    box-shadow: 0 0 15px 5px rgba(240, 230, 140, 0.7), /* 外層光暈 */
+                0 0 25px 15px rgba(240, 230, 140, 0.4); /* 更外層的、更淡的光暈 */
+
+    /* 讓滑鼠可以「穿透」螢火蟲，點擊到它下面的東西 */
+    pointer-events: none;
+
+    /* 讓螢火蟲的移動和顯隱都帶有平滑的過渡動畫 */
+    transition: transform 0.1s ease-out, opacity 0.5s ease-in-out;
+
+    /* 預設是隱藏的，等待我們的召喚 */
+    opacity: 0;
+
+    /* 讓它始終在最頂層，不會被其他東西蓋住 */
+    z-index: 9999;
+}
+
+/* --- 夢境魔法咒語 --- */
+
+/* 讓主容器可以作為子元素的定位參考點 */
+.gateway-container {
+    position: relative;
+}
+
+/* 怪獸感應區域的統一樣式 */
+.monster-hitbox {
+    position: absolute;
+    /* background-color: rgba(255, 0, 0, 0.2);  /* 除錯時可以打開這行，看看感應區在哪 */
+}
+
+/* 優化後的怪獸1感應區 */
+#monster-1 {
+    bottom: 10%;
+    left: 30%;
+    width: 20%;
+    height: 35%;
+    /* border: 1px solid red; /* 除錯時用 */
+}
+#monster-2 {
+    top: 30%;
+    right: 35%;
+    width: 20%;
+    height: 35%;
+    cursor: pointer; /* 讓滑鼠在文字上時變成手形 */
+}
+
+/* 優化後的夢境氣泡樣式 */
+.dream-bubble {
+    position: absolute;
+    top: -20%; /* 調整氣泡的垂直位置 */
+    left: 40%; /* 調整氣泡的水平位置 */
+    width: 70px; /* 稍微縮小一點 */
+    height: 70px;
+    /* 關鍵！讓氣泡半透明，並帶有柔和的邊框，融入畫面 */
+    background-color: rgba(13, 15, 18, 0.7);
+    border: 2px solid rgba(240, 230, 140, 0.3);
+    backdrop-filter: blur(3px); /* 增加一點毛玻璃效果，更有夢幻感 */
+
+    border-radius: 50%;
+    /* 為了讓它更有「夢」的感覺，我們稍微調整一下旋轉和縮放的動畫 */
+    transform: scale(0);
+    transform-origin: center; /* 讓它從中心點冒出來 */
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+/* 優化後的SVG樣式 */
+.dream-bubble svg {
+    width: 60%;
+    height: 60%;
+    transform: none;
+    stroke: rgba(255, 255, 255, 0.8);
+    stroke-width: 2.5; /* 讓線條稍微粗一點，更清晰 */
+}
+
+/* --- 生命氣息魔法咒語 --- */
+
+/* 1. 定義一個名為 'breathing' 的動畫 */
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.005); /* 緩緩地、細微地放大一點點 */
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 2. 將呼吸魔法賦予給我們的主視覺容器 */
+/* 我們讓整個背景圖一起呼吸，感覺更自然、更有沉浸感 */
+.gateway-container {
+    /* ... 保留所有原有樣式 ... */
+
+    /* 應用我們定義好的呼吸動畫 */
+    animation-name: breathing;
+    animation-duration: 5s; /* 呼吸一次的週期是5秒，非常平緩 */
+    animation-timing-function: ease-in-out; /* 讓呼吸的節奏更自然 */
+    animation-iteration-count: infinite; /* 無限循環 */
+}
+
+/* 全局淡出動畫 */
+body.fade-out-all {
+    opacity: 0;
+    transition: opacity 0.7s ease-in;
+}

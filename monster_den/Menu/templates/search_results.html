@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('menu.static', filename='css/menu_style.css') }}">
+<link rel="stylesheet" href="{{ url_for('menu.static', filename='css/search_style.css') }}">
+{% endblock %}
+
+{% block title %}回憶搜尋結果 - 怪獸巢穴{% endblock %}
+
+{% block content %}
+    <div class="search-results-container">
+        <h1>關於「{{ query }}」的回憶</h1>
+
+        {% if results %}
+            <p>我們一共找到了 {{ results|length }} 份相關的美味記憶：</p>
+            <div class="results-list">
+                {% for recipe in results %}
+                    <a href="{{ url_for('menu.day_details', year=recipe.date.year, month=recipe.date.month, day=recipe.date.day) }}" class="result-item">
+                        <div class="result-score">{{ recipe.score }}</div>
+                        <div class="result-info">
+                            <span class="result-date">{{ recipe.date.strftime('%Y-%m-%d') }}</span>
+                            <h3 class="result-name">{{ recipe.name }}</h3>
+                            {% if recipe.chef_comment %}
+                                <p class="result-comment">“ {{ recipe.chef_comment|truncate(80) }} ”</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>嗚……在我們的美食日誌裡，好像還沒有關於「{{ query }}」的記憶呢。要不要現在就去創造一份？</p>
+        {% endif %}
+         <a href="{{ url_for('menu.homepage') }}" class="back-to-calendar">← 返回日曆</a>
+    </div>
+{% endblock %}

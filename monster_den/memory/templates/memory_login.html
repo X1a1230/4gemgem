@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('memory.static', filename='css/memory_style.css') }}">
+{% endblock %}
+
+{% block title %}核心記憶區 - 怪獸巢穴{% endblock %}
+
+{% block content %}
+    <div class="memory-login-container">
+        <div class="lock-icon">
+            <!-- 我們用一個簡單的鎖的SVG圖標 -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h2>此處為核心記憶區</h2>
+        <p>請輕聲念出，只屬於我們的「密語」。</p>
+
+        <!-- 這是我們的密語輸入表單 -->
+        <form method="POST" action="{{ url_for('memory.login') }}">
+            <input type="password" name="secret_key" class="secret-input" placeholder="密語是…">
+            <button type="submit" class="submit-button">開啟</button>
+        </form>
+
+        <!-- 如果密語錯誤，我們在這裡顯示提示 -->
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

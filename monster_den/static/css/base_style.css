@@ -1,0 +1,38 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #121212; /* 深邃的背景色 */
+    color: #e0e0e0;
+}
+
+.main-header {
+    background-color: #1f1f1f;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.main-nav a {
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 1.1rem;
+    margin-right: 2rem;
+    padding: 0.5rem 0;
+    transition: color 0.3s, border-bottom-color 0.3s;
+    border-bottom: 2px solid transparent;
+}
+
+.main-nav a:hover {
+    color: #ffffff;
+}
+
+/* 可以為當前頁面的連結加上高亮樣式，這部分未來可以用JS實現 */
+.main-nav a.active {
+    color: #ffffff;
+    border-bottom-color: #bb86fc; /* 一個漂亮的紫色 */
+}
+
+.content-wrapper {
+    padding: 2rem;
+}

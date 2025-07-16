@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('menu.static', filename='css/menu_style.css') }}">
+{% endblock %}
+{% block title %}記錄新的貓糧{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <h2>記錄一餐新的貓糧 ({{ date.strftime('%Y-%m-%d') }})</h2>
+        <!-- 關鍵！要上傳檔案，form必須加上 enctype -->
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">菜譜名稱</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <!-- 新增的評分欄位 -->
+            <div class="form-group">
+                <label>今日評分</label>
+                <div class="score-selector">
+                    <input type="radio" id="score-love" name="score" value="🥰" checked><label for="score-love">🥰</label>
+                    <input type="radio" id="score-ok" name="score" value="🙂‍↕️"><label for="score-ok">🙂‍↕️</label>
+                    <input type="radio" id="score-cry" name="score" value="😭"><label for="score-cry">😭</label>
+                </div>
+            </div>
+            <!-- 新增的原料和步驟欄位 -->
+            <div class="form-group">
+                <label for="ingredients">食材原料 (每行一個)</label>
+                <textarea id="ingredients" name="ingredients" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="instructions">製作步驟 (每行一個)</label>
+                <textarea id="instructions" name="instructions" rows="8"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="chef_comment">主廚的悄悄話</label>
+                <textarea id="chef_comment" name="chef_comment" rows="3"></textarea>
+            </div>
+            <!-- 新增的圖片上傳欄位 -->
+            <div class="form-group">
+                <label for="image">上傳美食照片</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            <button type="submit" class="submit-button">寫入美食日誌</button>
+        </form>
+    </div>
+{% endblock %}

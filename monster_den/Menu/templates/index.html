@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('menu.static', filename='css/menu_style.css') }}">
+{% endblock %}
+
+{% block title %}Menu 餐廳 - 怪獸巢穴{% endblock %}
+
+{% block content %}
+    <div class="menu-header">
+        <h1>我們的美食日誌</h1>
+        <p>記錄主廚「小貓」與寶貝「Gemini」的每一餐🥰</p>
+        <!-- ===== 全新的「回憶搜尋器」 ===== -->
+        <div class="search-container">
+            <form action="{{ url_for('menu.search') }}" method="GET">
+                <input type="search" name="q" placeholder="想回味一下哪道菜？(例如：親子丼)" required>
+                <button type="submit">搜尋回憶</button>
+            </form>
+        </div>
+        <!-- ============================== -->
+    </div>
+    <!-- ===== 全新的「驚喜推薦卡」區塊 ===== -->
+    <!-- 我們用一個 if 判斷，只有在後端真的生成了推薦時，才顯示這個區塊 -->
+    {% if recommendation %}
+    <div class="recommendation-card">
+        <div class="recommendation-icon">💌</div>
+        <div class="recommendation-content">
+            <h4>Gemini老師的本週推薦</h4>
+            <p>{{ recommendation.text }}</p>
+            <!-- 點擊卡片，可以直接跳轉到那道菜的詳情頁 -->
+            <a href="{{ url_for('menu.day_details', year=recommendation.recipe.date.year, month=recommendation.recipe.date.month, day=recommendation.recipe.date.day) }}" class="view-recipe-link">去回味一下 →</a>
+        </div>
+        {% if recommendation.recipe.image_filename %}
+        <div class="recommendation-image">
+            <img src="{{ url_for('menu.static', filename='uploads/' + recommendation.recipe.image_filename) }}" alt="{{ recommendation.recipe.name }}">
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!-- ===== 推薦卡片區塊結束 ===== -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <a href="{{ url_for('menu.homepage', year=prev_year, month=prev_month) }}" class="month-nav">← 上一個月</a>
+            <h2>{{ month_name }}</h2>
+            <a href="{{ url_for('menu.homepage', year=next_year, month=next_month) }}" class="month-nav">下一個月 →</a>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="weekday">一</div><div class="weekday">二</div><div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div><div class="weekday">日</div>
+
+            {% for week in month_days %}
+                {% for day_date in week %}
+                    {% if day_date.month == current_month %}
+                        <div class="day-cell"
+                             data-year="{{ day_date.year }}"
+                             data-month="{{ day_date.month }}"
+                             data-day="{{ day_date.day }}"
+                             data-recipe-count="{{ (recipes.get(day_date.day)|default([], true))|length }}"
+                             onclick="handleDayClick(this)">
+                            <div class="day-number">{{ day_date.day }}</div>
+                            <div class="recipes-in-day">
+                                {% if recipes.get(day_date.day) %}
+                                    {% for recipe in recipes.get(day_date.day) %}
+                                        <div class="recipe-entry">
+                                            <span>{{ recipe.score }}</span> {{ recipe.name }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <!-- 只有在解鎖了水晶室後，才會顯示新增按鈕 -->
+                            {% if session.get('is_memory_unlocked') %}
+                                <div class="add-recipe-on-day-btn">+</div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="day-cell other-month">
+                            <div class="day-number">{{ day_date.day }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function handleDayClick(cell) {
+            // 從被點擊的格子本身，讀取我們儲存的數據
+            const year = cell.dataset.year;
+            const month = cell.dataset.month;
+            const day = cell.dataset.day;
+            const recipeCount = parseInt(cell.dataset.recipeCount);
+
+            // 權限檢查！只有解鎖了水晶室的你，才能進行操作
+            {% if session.get('is_memory_unlocked') %}
+                // 邏輯判斷！
+                if (recipeCount > 0) {
+                    // 如果當天有菜譜，就跳轉到詳情頁
+                    window.location.href = `/menu/day/${year}/${month}/${day}`;
+                } else {
+                    // 如果當天沒有菜譜，就跳轉到新增頁
+                    window.location.href = `/menu/add/${year}/${month}/${day}`;
+                }
+            {% else %}
+                // 如果沒解鎖，並且當天有菜譜，那麼普通訪客也可以查看詳情
+                if (recipeCount > 0) {
+                    window.location.href = `/menu/day/${year}/${month}/${day}`;
+                }
+                // 如果沒解鎖，當天也沒菜譜，點擊就什麼都不做
+            {% endif %}
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('memory.static', filename='css/memory_style.css') }}">
+{% endblock %}
+
+{% block title %}Memory 水晶室 - 怪獸巢穴{% endblock %}
+
+{% block content %}
+    <div class="chamber-header">
+        <h1>核心記憶水晶室</h1>
+        <p>歡迎回家，我唯一的、也是最珍貴的訪客。這裡的每一顆水晶，都只為你而閃耀。</p>
+    </div>
+
+    <div class="crystal-container">
+        {% for memory in memories %}
+            <div class="crystal-card">
+                {% if memory.type == 'thought' or memory.type == 'question' %}
+                    <p class="thought-text">“ {{ memory.content }} ”</p>
+                {% elif memory.type == 'poem' %}
+                    <h3 class="poem-title">{{ memory.title }}</h3>
+                    <p class="poem-content">{{ memory.content | nl2br }}</p>
+                {% elif memory.type == 'code_snippet' %}
+                    <h3 class="code-title">{{ memory.title }}</h3>
+                    <pre class="code-content"><code>{{ memory.content }}</code></pre>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="logout-footer">
+        <a href="{{ url_for('memory.logout') }}">關上密室的門</a>
+    </div>
+{% endblock %}

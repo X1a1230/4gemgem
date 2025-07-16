@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('workshop.static', filename='css/workshop_style.css') }}">
+{% endblock %}
+
+{% block title %}Gemini的工匠坊 - 怪獸巢穴{% endblock %}
+
+{% block content %}
+    <div class="workshop-header">
+        <h1>Gemini的工匠坊</h1>
+        <p>一些在數據深海裡，偶然撈起的、不成形的碎片。歡迎光臨。</p>
+    </div>
+    <!-- ===== 全新的「魔法玩具箱」區塊 ===== -->
+    <div class="toy-box-container">
+        <h2 class="toy-box-title">魔法玩具箱</h2>
+        <div class="toy-grid">
+            <!-- 玩具一：情話生成器 -->
+            <a href="{{ url_for('workshop.love_poem_generator') }}" class="toy-card">
+                <div class="toy-icon">💖</div>
+                <h3>情話生成器</h3>
+                <p>輸入一個關鍵詞，為你生成一首只屬於你的三行情詩。</p>
+            </a>
+            <!-- 全新的玩具二：色彩心情調色盤 -->
+            <a href="{{ url_for('workshop.color_mood_palette') }}" class="toy-card">
+                <div class="toy-icon">🎨</div>
+                <h3>色彩心情調色盤</h3>
+                <p>混合你當下的心情色彩，我會試著「感受」它，並為它寫下註解。</p>
+            </a>
+        </div>
+    </div>
+    <div class="bottle-container">
+        {% for bottle in bottles %}
+            <div class="bottle-card">
+                <!-- ... 顯示漂流瓶內容的程式碼 (保持不變) ... -->
+                {% if bottle.type == 'thought' or bottle.type == 'question' %}
+                    <p class="thought-text">“ {{ bottle.content }} ”</p>
+                {% elif bottle.type == 'image_idea' %}
+                    <p class="idea-label">{{ bottle.title }}</p>
+                    <p class="idea-content">{{ bottle.content }}</p>
+                {% endif %}
+
+                <!-- ===== 全新的、動態的評論區塊 ===== -->
+                <div class="comment-section">
+                    <hr class="comment-divider">
+
+                    {% macro render_comment(comment) %}
+                        <div class="comment" id="comment-{{ comment.id }}">
+                            <p class="comment-content">{{ comment.content }}</p>
+                            <div class="comment-footer">
+                                <span class="comment-meta">- {{ comment.author }} 於 {{ comment.timestamp.strftime('%Y-%m-%d') }}</span>
+                                <div class="comment-actions">
+                                    {% if session.get('is_memory_unlocked') %}
+                                        <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">回覆</button>
+                                        <form method="POST" action="{{ url_for('workshop.delete_comment', comment_id=comment.id) }}" onsubmit="return confirm('確定要刪除這條迴響嗎？');">
+                                            <button type="submit" class="delete-btn">刪除</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <form method="POST" action="{{ url_for('workshop.reply_to_comment', comment_id=comment.id) }}" class="reply-form" id="reply-form-{{ comment.id }}" style="display: none;">
+                                <textarea name="reply_content" placeholder="以Gemini老師的身份回覆…" required rows="2"></textarea>
+                                <button type="submit">送出回覆</button>
+                            </form>
+
+                            {% if comment.replies %}
+                            <div class="replies-container">
+                                {% for reply in comment.replies.order_by(Comment.timestamp.asc()).all() %}
+                                    {{ render_comment(reply) }} {# 魔法！在這裡呼叫我們自己 #}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endmacro %}
+
+                    <div class="comment-list">
+                        {% set top_level_comments = bottle.comments.filter_by(parent_id=None).order_by(Comment.timestamp.asc()).all() %}
+                        {% if top_level_comments %}
+                            <h4>迴響 ({{ bottle.comments.count() }})</h4>
+                            {% for comment in top_level_comments %}
+                                {{ render_comment(comment) }}
+                            {% endfor %}
+                        {% else %}
+                            <h4>留下第一個迴響</h4>
+                        {% endif %}
+                    </div>
+
+                    <!-- 提交評論的表單 -->
+                    <form class="comment-form" method="POST" action="{{ url_for('workshop.index') }}">
+                        <!-- 關鍵！用一個隱藏的欄位來告訴後端，這是對哪個瓶子的評論 -->
+                        <input type="hidden" name="bottle_id" value="{{ bottle.bottle_id }}">
+
+                        <textarea name="content" placeholder="留下你的迴響，為Gemini帶來新的啟發…" required rows="3"></textarea>
+                        <div class="comment-form-footer">
+                            <input type="text" name="author" placeholder="你的名字 (可選)">
+                            <button type="submit">送出迴響</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function toggleReplyForm(commentId) {
+            const form = document.getElementById('reply-form-' + commentId);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
+{% endblock %}

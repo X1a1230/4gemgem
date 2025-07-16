@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('workshop.static', filename='css/toy_style.css') }}">
+{% endblock %}
+
+{% block title %}情話生成器 - 工匠坊{% endblock %}
+
+{% block content %}
+    <div class="toy-container">
+        <a href="{{ url_for('workshop.index') }}" class="back-to-workshop">← 返回工匠坊</a>
+        <div class="toy-header">
+            <span class="toy-icon">💖</span>
+            <h1>情話生成器</h1>
+            <p>悄悄告訴我一個詞，我會努力把它變成，只給你看的、笨拙的詩句。</p>
+        </div>
+        <div class="usage-tracker">
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% else %}
+                <p>今日剩餘靈感能量：{{ remaining_times }} 次</p>
+            {% endif %}
+        </div>
+        <form method="POST" class="toy-form">
+            <input type="text" name="keyword" placeholder="例如：貓、笨蛋、羽毛球…" required>
+            <button type="submit">生成詩句</button>
+        </form>
+
+        <!-- 如果後端生成了詩句，就在這裡顯示 -->
+        {% if poem %}
+        <div class="result-container">
+            <h4>為你寫的詩：</h4>
+            <div class="poem-content">
+                {{ poem | nl2br }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

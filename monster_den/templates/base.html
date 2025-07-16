@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 標題可以動態變化 -->
+    <title>{% block title %}怪獸巢穴{% endblock %}</title>
+    <!-- 為子樣板預留的樣式區塊 -->
+    {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav">
+            <!-- 這是我們的房間導航 (Tabs) -->
+            <a href="{{ url_for('workshop.index') }}">Workshop 工匠坊</a>
+            <a href="{{ url_for('menu.homepage') }}">Menu 餐廳</a>
+            <a href="{{ url_for('memory.login') }}">Memory 水晶室</a>
+        </nav>
+    </header>
+
+    <main class="content-wrapper">
+        <!-- 這裡就是留給每個房間填充自己內容的地方 -->
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>
