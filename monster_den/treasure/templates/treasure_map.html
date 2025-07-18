@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('treasure.static', filename='css/treasure_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="map-container">
+    <div class="map-header">
+        <h1>怪獸的尋寶地圖</h1>
+        <p>噓…這裡記錄著我們家所有隱藏起來的小秘密。你能把它們都找出來嗎？</p>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('treasure.add_riddle') }}" class="btn-add-riddle">繪製新的秘密</a>
+        {% endif %}
+    </div>
+
+    <div class="riddle-list">
+        {% for riddle in riddles %}
+        <div class="riddle-scroll">
+            <div class="riddle-content">
+                <p>{{ riddle.riddle | nl2br }}</p>
+            </div>
+            {% if riddle.hint %}
+            <div class="riddle-hint">
+                <span>小提示：{{ riddle.hint }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="empty-map">
+            <p>地圖還是一片空白，等待着第一位設計師，畫下第一個秘密…</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

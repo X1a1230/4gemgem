@@ -88,7 +88,17 @@
     animation: pulse-group 4s infinite ease-in-out;
 }
 .flower.bloomed svg .center {
+    transform-origin: center center; /* 確保變換的中心點在正中央 */
     animation: pulse-center 4s infinite ease-in-out;
+    /* 我們把 pulse-center 的顏色變化，放到這裡 */
+    animation-name: pulse, pulse-center-color;
+}
+
+/* --- 全新的！彩蛋花朵的樣式！ --- */
+.flower.bloomed.rare svg .center {
+    /* 當花朵擁有 rare class 時，它的花蕊就會開始播放彩虹動畫！ */
+    transform-origin: center center; /* 確保變換的中心點在正中央 */
+    animation: rainbow-pulse 4s infinite ease-in-out;
 }
 
 .water-count {
@@ -109,13 +119,34 @@
     opacity: 1;
 }
 
-/* 我們把 pulse 動畫改名為 pulse-group，專門給花瓣組用 */
-@keyframes pulse-group {
+/* --- 我們把 pulse-group 和 pulse-center 的動畫，合併成一個 pulse 動畫 --- */
+@keyframes pulse {
     0%, 100% { transform: scale(1); filter: brightness(1); }
     50% { transform: scale(1.05); filter: brightness(1.2); }
 }
 
-@keyframes pulse-center {
+/* 我們綻放的花朵，現在都使用這個統一的動畫 */
+.flower.bloomed svg .petal-group {
+    transform: scale(1);
+    animation: pulse 4s infinite ease-in-out;
+}
+.flower.bloomed svg .center {
+    animation: pulse 4s infinite ease-in-out;
+    /* 我們把 pulse-center 的顏色變化，放到這裡 */
+    animation-name: pulse, pulse-center-color;
+}
+
+/* --- 新增的動畫 --- */
+@keyframes pulse-center-color {
     0%, 100% { fill: #f1c40f; }
     50% { fill: #f39c12; }
+}
+
+/* --- 全新的！彩虹花蕊的動畫！ --- */
+@keyframes rainbow-pulse {
+    0%   { fill: #ffadad; transform: scale(1.0); } /* 粉紅 */
+    25%  { fill: #ffd6a5; transform: scale(1.1); } /* 橙黃 */
+    50%  { fill: #caffbf; transform: scale(1.0); } /* 嫩綠 */
+    75%  { fill: #9bf6ff; transform: scale(1.1); } /* 天藍 */
+    100% { fill: #ffadad; transform: scale(1.0); } /* 回到粉紅 */
 }

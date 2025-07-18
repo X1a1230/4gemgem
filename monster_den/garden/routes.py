@@ -24,9 +24,20 @@ def water_flower(flower_id):
         flower.status = 'bloomed'
 
     flower.times_watered += 1
+    # --- 我們的彩蛋觸發器！ ---
+    # 為了方便測試，我們先把觸發條件設為 10 次
+    # 未來我們可以把它改成 99 次，或者任何我們喜歡的數字！
+    if flower.times_watered >= 10 and not flower.special_status:
+        flower.special_status = 'rare'
+
     db.session.commit()
-    # 回傳一個 JSON，告訴前端操作成功
-    return jsonify({'success': True, 'status': flower.status, 'times_watered': flower.times_watered})
+    # 在回傳的 JSON 裡，加上我們新的彩蛋狀態！
+    return jsonify({
+        'success': True,
+        'status': flower.status,
+        'times_watered': flower.times_watered,
+        'special_status': flower.special_status
+    })
 
 
 @garden_bp.route('/garden/plant', methods=['POST'])

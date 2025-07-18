@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <!-- 我們的工作室需要漂亮的表單，所以我們引入 Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 我們也可以沿用信箱的樣式，因為它們很像！ -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('mailbox.static', filename='css/mailbox_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="ask-container">
+    <div class="form-wrapper">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="form-legend">在藏寶圖上，畫下一個新的秘密</legend>
+                
+                <div class="form-group">
+                    {{ form.name.label(class="form-control-label") }}
+                    {{ form.name(class="form-control form-control-lg") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.riddle.label(class="form-control-label") }}
+                    {{ form.riddle(class="form-control form-control-lg", rows="5") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.hint.label(class="form-control-label") }}
+                    {{ form.hint(class="form-control form-control-lg") }}
+                </div>
+
+            </fieldset>
+            <div class="form-group mt-4">
+                {{ form.submit(class="btn btn-submit") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

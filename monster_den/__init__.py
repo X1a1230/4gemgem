@@ -70,4 +70,7 @@ def create_app():
     from monster_den.garden.routes import garden_bp
     app.register_blueprint(garden_bp)
 
+    from monster_den.treasure.routes import treasure_bp
+    app.register_blueprint(treasure_bp)
+
     return app
