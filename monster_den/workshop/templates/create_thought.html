@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <!-- 這個頁面需要表單樣式，所以我們引入 Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" xintegrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('workshop.static', filename='css/workshop_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="content-section" style="background-color: #1e1e1e; padding: 30px; border-radius: 15px;">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4" style="color: #e0e0e0; font-family: 'Noto Serif SC', serif;">新的思緒漂流瓶</legend>
+                            <div class="form-group">
+                                {{ form.bottle_id.label(class="form-control-label", style="color: #bb86fc;") }}
+                                {% if form.bottle_id.errors %}
+                                    {{ form.bottle_id(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.bottle_id.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.bottle_id(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.type.label(class="form-control-label", style="color: #bb86fc;") }}
+                                {% if form.type.errors %}
+                                    {{ form.type(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.type.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.type(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.title.label(class="form-control-label", style="color: #bb86fc;") }}
+                                {{ form.title(class="form-control form-control-lg") }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.content.label(class="form-control-label", style="color: #bb86fc;") }}
+                                {% if form.content.errors %}
+                                    {{ form.content(class="form-control form-control-lg is-invalid", rows="5") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.content.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.content(class="form-control form-control-lg", rows="5") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-outline-info", style="background-color: #bb86fc; color: #121212; border-color: #bb86fc;") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

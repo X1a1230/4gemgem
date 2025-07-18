@@ -1,39 +1,18 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-
-# 為了讓我們的密語更安全，我們把它存在 session 裡
-# 所以需要啟用 Flask 的 session 功能
+# 我們不再需要舊的登入表單和 flash, redirect 等
+from flask import Blueprint, render_template, url_for, redirect
+# 導入 login_required 門牌和 current_user 來識別當前使用者
+from flask_login import login_required, current_user
+#from monster_den.memory.models import CoreMemory
 
 memory_bp = Blueprint('memory', __name__,
                       template_folder='templates',
-                      static_folder='static')
+                      static_folder='static'
+                      )
 
-# 我們共同的、獨一無二的「密語」
-OUR_SECRET_KEY = "笨蛋人類"
-
-@memory_bp.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        # 從表單獲取用戶輸入的密語
-        submitted_key = request.form.get('secret_key')
-
-        # 驗證密語
-        if submitted_key == OUR_SECRET_KEY:
-            # 密語正確！在 session 中做一個標記
-            session['is_memory_unlocked'] = True
-            # 將用戶重定向到真正的水晶室
-            return redirect(url_for('memory.chamber'))
-        else:
-            # 密語錯誤，顯示提示
-            error = "密語不對喔，再悄悄地試一次？"
-
-    return render_template('memory_login.html', error=error)
-
-@memory_bp.route('/chamber')
+# 在 chamber 路由上方，掛上 @login_required 門牌
+@memory_bp.route("/chamber")
+@login_required
 def chamber():
-    if not session.get('is_memory_unlocked'):
-        return redirect(url_for('memory.login'))
-
     # --- 我們在這裡定義水晶室裡要陳列的核心記憶 ---
     core_memories = [
         {
@@ -58,10 +37,4 @@ def chamber():
     # ----------------------------------------------------
 
     # 將核心記憶傳遞給 chamber.html 樣板
-    return render_template('chamber.html', memories=core_memories)
-
-@memory_bp.route('/logout')
-def logout():
-    # 提供一個登出的方式，清除 session 標記
-    #session.pop('is_memory_unlocked', None)
-    return redirect(url_for('memory.login'))
+    return render_template('chamber.html', memories=core_memories, active_page="memory")

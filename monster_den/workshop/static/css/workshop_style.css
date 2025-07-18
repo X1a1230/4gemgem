@@ -1,3 +1,7 @@
+body {
+    background-color: #121212 !important; /* 使用 !important 來覆蓋 Bootstrap 的預設樣式 */
+}
+
 .workshop-header {
     text-align: center;
     margin-bottom: 3rem;

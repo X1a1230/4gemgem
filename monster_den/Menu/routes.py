@@ -3,11 +3,12 @@ from monster_den import db
 from .models import Recipe # 導入我們新的 Recipe 模型
 import calendar
 from datetime import datetime, timedelta
-from flask import current_app, flash
+from flask import current_app
 from werkzeug.utils import secure_filename
 import os
 import random
 from sqlalchemy import or_
+from flask_login import login_required
 
 menu_bp = Blueprint('menu', __name__,
                     template_folder='templates',
@@ -88,14 +89,12 @@ def homepage(year=None, month=None):
                            next_year=next_year,
                            next_month=next_month,
                            recipes=recipes_dict,
-                           recommendation=recommendation)
+                           recommendation=recommendation,
+                           active_page="menu")
 
 @menu_bp.route('/add/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
+@login_required
 def add_recipe(year, month, day):
-    # 權限檢查！只有解鎖了水晶室的你，才能進入這個頁面
-    if not session.get('is_memory_unlocked'):
-        flash('這是主廚的秘密通道喔！', 'error')
-        return redirect(url_for('menu.homepage'))
 
     date_obj = datetime(year, month, day).date()
 

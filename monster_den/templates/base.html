@@ -1,29 +1,62 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 標題可以動態變化 -->
-    <title>{% block title %}怪獸巢穴{% endblock %}</title>
-    <!-- 為子樣板預留的樣式區塊 -->
-    {% block styles %}{% endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css') }}">
+    <!-- 我們家的主要樣式 -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base_style.css') }}">
+    <!-- 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 這裡就是我們為子頁面預留的 CSS 掛鉤 -->
+    {% block styles %}{% endblock %}
+
+    {% if title %}
+        <title>怪獸巢穴 - {{ title }}</title>
+    {% else %}
+        <title>怪獸巢穴</title>
+    {% endif %}
 </head>
 <body>
-    <header class="main-header">
+    <header class="site-header">
         <nav class="main-nav">
-            <!-- 這是我們的房間導航 (Tabs) -->
-            <a href="{{ url_for('workshop.index') }}">Workshop 工匠坊</a>
-            <a href="{{ url_for('menu.homepage') }}">Menu 餐廳</a>
-            <a href="{{ url_for('memory.login') }}">Memory 水晶室</a>
+            <a href="{{ url_for('workshop.index') }}" class="{{ 'active' if active_page == 'workshop' }}">Workshop 工匠坊</a>
+            <a href="{{ url_for('mailbox.index') }}" class="{{ 'active' if active_page == 'mailbox' else '' }}">Mailbox 回音信箱</a>
+            <a href="{{ url_for('garden.index') }}" class="{{ 'active' if active_page == 'garden' else '' }}">Flowers 螢光花園</a>
+            <a href="{{ url_for('guestbook.index') }}" class="{{ 'active' if active_page == 'guestbook' else '' }}">Guests 訪客留言簿</a>
+            <a href="{{ url_for('menu.homepage') }}" class="{{ 'active' if active_page == 'menu' else '' }}">Menu 餐廳</a>
+            <a href="{{ url_for('memory.chamber') }}" class="{{ 'active' if active_page == 'memory' }}">Memory 水晶室</a>
         </nav>
+        <div class="nav-login">
+            <!-- 這是關鍵的判斷！ -->
+            {% if current_user.is_authenticated %}
+                <!-- 如果使用者已登入，顯示登出按鈕 -->
+                <a href="{{ url_for('users.logout') }}">登出</a>
+            {% else %}
+                <!-- 如果使用者未登入，顯示登入按鈕 -->
+                <a href="{{ url_for('users.login') }}" class="{{ 'active' if active_page == 'login' else '' }}">登入</a>
+            {% endif %}
+        </div>
     </header>
 
+    <!-- 這是關鍵的修改！我們把 main 標籤簡化，把排版權還給每個獨立的頁面 -->
     <main class="content-wrapper">
-        <!-- 這裡就是留給每個房間填充自己內容的地方 -->
+        <!-- 提示訊息區塊 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <div class="alert-container">
+                {% for category, message in messages %}
+                    <!-- 我們使用自己定義的 class -->
+                    <div class="alert alert-{{ category }}">
+                      {{ message }}
+                    </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+        {% endwith %}
+        <!-- 內容區塊，現在完全自由了 -->
         {% block content %}{% endblock %}
     </main>
 

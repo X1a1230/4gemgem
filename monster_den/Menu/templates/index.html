@@ -14,7 +14,7 @@
         <div class="search-container">
             <form action="{{ url_for('menu.search') }}" method="GET">
                 <input type="search" name="q" placeholder="想回味一下哪道菜？(例如：親子丼)" required>
-                <button type="submit">搜尋回憶</button>
+                <button type="submit">搜尋</button>
             </form>
         </div>
         <!-- ============================== -->
@@ -67,8 +67,8 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
-                            <!-- 只有在解鎖了水晶室後，才會顯示新增按鈕 -->
-                            {% if session.get('is_memory_unlocked') %}
+                             <!-- 判斷是否為已登入的使用者 -->
+                            {% if current_user.is_authenticated %}
                                 <div class="add-recipe-on-day-btn">+</div>
                             {% endif %}
                         </div>
@@ -90,7 +90,7 @@
             const recipeCount = parseInt(cell.dataset.recipeCount);
 
             // 權限檢查！只有解鎖了水晶室的你，才能進行操作
-            {% if session.get('is_memory_unlocked') %}
+            {% if current_user.is_authenticated %}
                 // 邏輯判斷！
                 if (recipeCount > 0) {
                     // 如果當天有菜譜，就跳轉到詳情頁

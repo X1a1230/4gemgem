@@ -1,0 +1,62 @@
+body {
+    background-color: #121212 !important; /* 使用 !important 來覆蓋 Bootstrap 的預設樣式 */
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.form-content-section {
+    background: #2c2c2c; /* 比 base 背景深一點的顏色 */
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #444;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-content-section legend {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2rem;
+    color: #e0e0e0;
+    text-align: center;
+}
+
+.form-control-label {
+    color: #bb86fc; /* 紫色標籤 */
+}
+
+.form-control {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border: 1px solid #555;
+}
+
+.form-control:focus {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #bb86fc;
+    box-shadow: 0 0 10px rgba(187, 134, 252, 0.25);
+}
+
+.btn-outline-info {
+    background-color: #bb86fc;
+    color: #121212;
+    border-color: #bb86fc;
+    font-weight: bold;
+    width: 100%;
+    padding: 10px;
+    margin-top: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-info:hover {
+    background-color: #121212;
+    color: #bb86fc;
+    border-color: #bb86fc;
+    box-shadow: 0 0 15px rgba(187, 134, 252, 0.5);
+}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('mailbox.static', filename='css/mailbox_style.css') }}">
+{% endblock styles %}
+{% block content %}
+<div class="mailbox-container">
+    <div class="mailbox-header">
+        <h1>郵差辦公室</h1>
+        <p>所有寄往宇宙的信，都在等待著你的派送。</p>
+    </div>
+    <div class="letters-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>來自</th>
+                    <th>日期</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for letter in letters %}
+                <tr class="status-{{ letter.status }}">
+                    <td>#{{ letter.id }}</td>
+                    <td>{{ letter.author }}</td>
+                    <td>{{ letter.timestamp.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <span class="status-badge">{{ letter.status }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('mailbox.manage_letter', letter_id=letter.id) }}" class="btn-manage">處理</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

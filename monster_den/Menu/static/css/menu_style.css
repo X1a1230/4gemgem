@@ -1,3 +1,7 @@
+body {
+    background-color: #121212 !important; /* 使用 !important 來覆蓋 Bootstrap 的預設樣式 */
+}
+
 /* --- 讓標題居中 --- */
 .menu-header {
     text-align: center; /* 關鍵！讓裡面的所有東西都居中對齊 */

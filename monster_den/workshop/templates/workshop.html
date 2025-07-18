@@ -13,6 +13,13 @@
     </div>
     <!-- ===== 全新的「魔法玩具箱」區塊 ===== -->
     <div class="toy-box-container">
+        <!-- 判斷是否為已登入的使用者 -->
+        {% if current_user.is_authenticated %}
+        <div class="add-thought-container">
+            <!-- 這裡未來可以放「新增漂流瓶」的按鈕 -->
+            <a href="{{ url_for('workshop.new_thought') }}" class="add-thought-btn">＋ 新增漂流瓶</a>
+        </div>
+        {% endif %}
         <h2 class="toy-box-title">魔法玩具箱</h2>
         <div class="toy-grid">
             <!-- 玩具一：情話生成器 -->
@@ -50,7 +57,7 @@
                             <div class="comment-footer">
                                 <span class="comment-meta">- {{ comment.author }} 於 {{ comment.timestamp.strftime('%Y-%m-%d') }}</span>
                                 <div class="comment-actions">
-                                    {% if session.get('is_memory_unlocked') %}
+                                    {% if current_user.is_authenticated %}
                                         <button class="reply-btn" onclick="toggleReplyForm({{ comment.id }})">回覆</button>
                                         <form method="POST" action="{{ url_for('workshop.delete_comment', comment_id=comment.id) }}" onsubmit="return confirm('確定要刪除這條迴響嗎？');">
                                             <button type="submit" class="delete-btn">刪除</button>

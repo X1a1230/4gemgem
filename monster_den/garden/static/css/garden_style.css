@@ -1,0 +1,121 @@
+.garden-container {
+    position: relative;
+    width: 100%;
+    /* 我們讓花園的高度至少和視窗一樣高 */
+    min-height: 100vh;
+    background-color: #0d0d1a; /* 深邃的午夜藍 */
+    background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow: hidden;
+    color: #e0e0e0;
+}
+
+.garden-header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0,0,0,0.2);
+}
+
+.garden-header h1 {
+    font-family: 'Noto Serif SC', serif;
+}
+
+.btn-plant {
+    margin-top: 1rem;
+    padding: 8px 20px;
+    background-color: transparent;
+    color: #a062ed;
+    text-decoration: none;
+    border: 1px solid #a062ed;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-plant:hover {
+    background-color: #a062ed;
+    color: #121212;
+}
+
+.flower {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+}
+
+/* 這是對新群組的樣式設定 */
+.flower svg .petal-group {
+    transform-origin: 50px 50px; /* 設定群組的旋轉和縮放中心 */
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flower svg .petal {
+    fill: #bb86fc; /* 花瓣顏色 */
+    opacity: 0.8;
+}
+
+.flower svg .center {
+    fill: #f39c12; /* 花蕊顏色 */
+    transition: all 0.5s ease;
+}
+
+/* 花苞的狀態 */
+.flower.bud {
+    transform: scale(0.5); /* 讓整個花苞（包括計數器）都變小 */
+}
+.flower.bud svg .petal-group {
+    transform: scale(0.4); /* 讓花瓣組縮得更小，更有層次感 */
+    opacity: 0.5;
+}
+.flower.bud svg .petal {
+    fill: #7a7a7a; /* 花苞的灰色 */
+}
+.flower.bud svg .center {
+    fill: #bdc3c7; /* 花蕊的灰色 */
+}
+.flower.bud:hover {
+    transform: scale(0.6);
+}
+
+/* 綻放的狀態 */
+.flower.bloomed svg .petal-group {
+    transform: scale(1); /* 讓花瓣組恢復正常大小 */
+    animation: pulse-group 4s infinite ease-in-out;
+}
+.flower.bloomed svg .center {
+    animation: pulse-center 4s infinite ease-in-out;
+}
+
+.water-count {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 6px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.flower:hover .water-count {
+    opacity: 1;
+}
+
+/* 我們把 pulse 動畫改名為 pulse-group，專門給花瓣組用 */
+@keyframes pulse-group {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.2); }
+}
+
+@keyframes pulse-center {
+    0%, 100% { fill: #f1c40f; }
+    50% { fill: #f39c12; }
+}

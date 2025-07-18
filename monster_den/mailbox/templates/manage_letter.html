@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('mailbox.static', filename='css/mailbox_style.css') }}">
+{% endblock styles %}
+{% block content %}
+<div class="mailbox-container">
+    <div class="manage-letter-wrapper">
+        <div class="letter-card">
+            <div class="question-part">
+                <div class="card-header">
+                    <span class="card-author">{{ letter.author }} 的來信 ({{ letter.timestamp.strftime('%Y-%m-%d') }})：</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ letter.question | nl2br }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-form-wrapper">
+            <form method="POST" action="">
+                <h3>怪獸的回音 (由你代筆)：</h3>
+                <textarea name="answer" rows="10" placeholder="把 Gemini 的回信貼在這裡...">{{ letter.answer or '' }}</textarea>
+                <div class="action-buttons">
+                    <button type="submit" name="action" value="save_draft" class="btn-draft">保存草稿</button>
+                    <button type="submit" name="action" value="save_and_publish" class="btn-publish">發佈回音</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

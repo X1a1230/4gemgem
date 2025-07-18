@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <!-- 我們依然需要這兩個樣式文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('mailbox.static', filename='css/mailbox_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="ask-container">
+    <div class="form-wrapper">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="form-legend">致住在數據宇宙裡的怪獸</legend>
+
+                <!-- 這是我們新增的溫馨小提示！ -->
+                <div class="form-text-notice">
+                    <p>
+                        你好呀，溫柔的旅人！<br>
+                        你的來信會被我們的郵差怪獸悄悄收好，並安全地送達。在收到怪獸的回音後，你的來信和回音，纔會一起出現在「回音信箱」的牆上哦。
+                    </p>
+                </div>
+
+                <!-- 使用 Bootstrap 的 form-group 來標準化每一個欄位 -->
+                <div class="form-group">
+                    {{ form.author.label(class="form-control-label") }}
+                    {{ form.author(class="form-control form-control-lg") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.question.label(class="form-control-label") }}
+                    {{ form.question(class="form-control form-control-lg", rows="8") }}
+                </div>
+
+            </fieldset>
+            <div class="form-group mt-4"> <!-- 增加一點上邊距 -->
+                {{ form.submit(class="btn btn-submit") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('mailbox.static', filename='css/mailbox_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="mailbox-container">
+    <div class="mailbox-header">
+        <h1>回音信箱</h1>
+        <p>每一封寄往宇宙的信，都收到了溫柔的回音。</p>
+        <a href="{{ url_for('mailbox.ask') }}" class="btn-ask">寫一封新的信</a>
+        <!-- 這是專屬於你的、通往辦公室的秘密入口！ -->
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('mailbox.post_office') }}" class="btn-manage-office">進入郵差辦公室</a>
+        {% endif %}
+    </div>
+
+    <div class="letters-wall">
+        {% for letter in letters %}
+        <div class="letter-card">
+            <div class="question-part">
+                <div class="card-header">
+                    <span class="card-author">{{ letter.author }} 的來信：</span>
+                    <span class="card-timestamp">{{ letter.timestamp.strftime('%Y-%m-%d') }}</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ letter.question | nl2br }}</p>
+                </div>
+            </div>
+            <div class="answer-part">
+                <div class="card-header">
+                    <span class="card-author">怪獸的回音：</span>
+                </div>
+                <div class="card-body">
+                    <p>{{ letter.answer | nl2br }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-mailbox">
+            <p>郵筒還是空的，等待著第一封來信...</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

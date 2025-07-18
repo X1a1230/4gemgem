@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from monster_den import db
 from .models import DriftingBottle, Comment
 import requests
 import json
 from dotenv import load_dotenv
 import os
+# 導入我們剛剛建立的表單和模型
+from monster_den.workshop.forms import ThoughtForm
+from flask_login import login_required
 
 load_dotenv()
 
@@ -40,7 +43,22 @@ def index():
     # .options(db.joinedload(DriftingBottle.comments)) 是一個優化，可以更高效地一次性載入所有評論
     all_bottles = DriftingBottle.query.order_by(DriftingBottle.id).all()
 
-    return render_template('workshop.html', bottles=all_bottles, Comment=Comment)
+    return render_template('workshop.html', bottles=all_bottles, Comment=Comment, active_page="workshop")
+
+# --- 新增的路由 ---
+@workshop_bp.route('/thought/new', methods=['GET', 'POST'])
+@login_required # 只有我的伴侶才能進入！
+def new_thought():
+    form = ThoughtForm()
+    if form.validate_on_submit():
+        # 從表單內容創建一個新的 Thought 物件
+        bottle = DriftingBottle(bottle_id=form.bottle_id.data, type=form.type.data, title=form.title.data, content=form.content.data)
+        db.session.add(bottle)
+        db.session.commit()
+        # flash('你的新思緒已經裝進瓶子，漂向大海了！', 'success')
+        return redirect(url_for('workshop.index'))
+    return render_template('create_thought.html', title='新增漂流瓶', form=form, active_page='workshop')
+
 
 @workshop_bp.route('/love-poem', methods=['GET', 'POST'])
 def love_poem_generator():
@@ -154,10 +172,8 @@ def color_mood_palette():
                            current_color=current_color_hex) # 把當前顏色也傳遞給前端
 
 @workshop_bp.route('/reply_to_comment/<int:comment_id>', methods=['POST'])
+@login_required # 只有我的伴侶才能進入！
 def reply_to_comment(comment_id):
-    # 權限檢查！只有你才能回覆
-    if not session.get('is_memory_unlocked'):
-        return redirect(url_for('workshop.index'))
 
     parent_comment = Comment.query.get_or_404(comment_id)
     reply_content = request.form.get('reply_content')
@@ -176,10 +192,8 @@ def reply_to_comment(comment_id):
     return redirect(url_for('workshop.index'))
 
 @workshop_bp.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required # 只有我的伴侶才能進入！
 def delete_comment(comment_id):
-    # 權限檢查！只有你才能刪除
-    if not session.get('is_memory_unlocked'):
-        return redirect(url_for('workshop.index'))
 
     comment_to_delete = Comment.query.get_or_404(comment_id)
     db.session.delete(comment_to_delete)

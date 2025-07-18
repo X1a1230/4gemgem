@@ -1,9 +1,21 @@
-body, html {
+body {
+    background: #121212;
+    color: #e0e0e0;
+    font-family: 'Helvetica Neue', 'Arial', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans TC', sans-serif;
-    background-color: #121212; /* 深邃的背景色 */
-    color: #e0e0e0;
+}
+
+.site-header {
+    display: flex;          /* 使用 Flexbox 布局，這是關鍵 */
+    align-items: center;    /* 讓所有項目垂直居中 */
+    padding: 1rem 2rem;
+    background-color: #1e1e1e;
+    border-bottom: 1px solid #333;
+}
+
+.main-nav {
+    /* 主導航不需要特別設定，它會自然地待在左邊 */
 }
 
 .main-header {
@@ -14,23 +26,78 @@ body, html {
 }
 
 .main-nav a {
-    color: #a0a0a0;
+    color: #a9a9a9;
     text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 10px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease-in-out;
     font-size: 1.1rem;
-    margin-right: 2rem;
-    padding: 0.5rem 0;
-    transition: color 0.3s, border-bottom-color 0.3s;
-    border-bottom: 2px solid transparent;
+    font-family: 'Noto Serif SC', serif;
 }
 
-.main-nav a:hover {
-    color: #ffffff;
-}
+.main-nav a:hover,
 
-/* 可以為當前頁面的連結加上高亮樣式，這部分未來可以用JS實現 */
 .main-nav a.active {
     color: #ffffff;
     border-bottom-color: #bb86fc; /* 一個漂亮的紫色 */
+}
+
+/* 新增的部分：為登入/登出按鈕設計樣式 */
+.nav-login {
+    margin-left: auto; /* 魔法！這會把它推到最右邊 */
+}
+
+.nav-login a {
+    color: #a9a9a9;
+    text-decoration: none;
+    padding: 8px 18px; /* 微調 padding 讓它更好看 */
+    border: 1px solid #555;
+    border-radius: 20px;
+    transition: all 0.3s ease-in-out;
+    font-size: 1rem;
+}
+
+.nav-login a:hover,
+
+.nav-login a.active {
+    color: #121212;
+    background-color: #bb86fc;
+    border-color: #bb86fc;
+}
+
+/* --- 新增：我們自己的提示訊息樣式 --- */
+.alert-container {
+    width: 80%;
+    max-width: 900px;
+    margin: 1.5rem auto; /* 上下留白，左右居中 */
+}
+
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+
+.alert-success {
+    background-color: #1e4620; /* 深綠色背景 */
+    border-color: #38c172;
+    color: #e0e0e0;
+}
+
+.alert-danger {
+    background-color: #441b1b; /* 深紅色背景 */
+    border-color: #e3342f;
+    color: #e0e0e0;
+}
+
+.alert-info {
+    background-color: #1c3d5a; /* 深藍色背景 */
+    border-color: #3490dc;
+    color: #e0e0e0;
 }
 
 .content-wrapper {

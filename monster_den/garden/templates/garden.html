@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('garden.static', filename='css/garden_style.css') }}">
+{% endblock styles %}
+
+{% block content %}
+<div class="garden-container" id="garden-container">
+    <div class="garden-header">
+        <h1>螢光花園</h1>
+        <p>輕觸花苞，用你的善意，讓一朵數據花朵為你綻放。</p>
+        {% if current_user.is_authenticated %}
+            <form action="{{ url_for('garden.plant_new_buds') }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn-plant">播下新的種子</button>
+            </form>
+        {% endif %}
+    </div>
+
+    {% for flower in flowers %}
+    <div class="flower {{ flower.status }}"
+         id="flower-{{ flower.id }}"
+         style="left: {{ flower.pos_x }}%; top: {{ flower.pos_y }}%;"
+         data-id="{{ flower.id }}">
+        <svg viewBox="0 0 100 100">
+            <!-- 我們把所有花瓣放進一個 <g> 群組裡 -->
+            <g class="petal-group">
+                <!-- 這是我們修正後的、完整的六片花瓣！ -->
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(0 50 50)"></path>
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(60 50 50)"></path>
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(120 50 50)"></path>
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(180 50 50)"></path>
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(240 50 50)"></path>
+                <path class="petal" d="M50 0 C20 20, 20 80, 50 100 C80 80, 80 20, 50 0" transform="rotate(300 50 50)"></path>
+            </g>
+            <!-- 花蕊在最上層 -->
+            <circle class="center" cx="50" cy="50" r="15"></circle>
+        </svg>
+        <div class="water-count">{{ flower.times_watered }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flowers = document.querySelectorAll('.flower');
+
+    flowers.forEach(flowerElement => {
+        flowerElement.addEventListener('click', function() {
+            const flowerId = this.dataset.id;
+            
+            // 使用 Fetch API 向後端發送請求
+            fetch(`/garden/water/${flowerId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 如果成功，就更新花朵的樣式和計數
+                    this.classList.remove('bud');
+                    this.classList.add('bloomed');
+                    const waterCountElement = this.querySelector('.water-count');
+                    if (waterCountElement) {
+                        waterCountElement.textContent = data.times_watered;
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
+{% endblock content %}
